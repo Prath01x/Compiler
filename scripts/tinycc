@@ -1,0 +1,13 @@
+#! /bin/sh
+set -eu
+
+SELF="$0"
+while LINK="$(readlink "$SELF")"; do
+	case "$LINK" in
+		/*) SELF="$LINK";;
+		*)  SELF="${SELF%/*}/$LINK";;
+	esac
+done
+BASEDIR="${SELF%/*}"
+
+exec java -cp "${BASEDIR}/../libs/com.microsoft.z3.jar:${BASEDIR}/../bin" -ea tinycc.driver.TinyC "$@"

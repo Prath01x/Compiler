@@ -1,0 +1,36 @@
+#! /bin/sh
+set -eu
+
+SELF="$0"
+BASEDIR="${SELF%/*}"
+
+alias mars='java -jar "$BASEDIR/../libs/mars.jar" "$@"'
+
+if [ "$#" = 0 ]; then
+	echo "usage: ${0##*/} <assembler file>... [-- <argument>...]" >&2
+	exit 1
+fi
+
+while LINK="$(readlink "$SELF")"; do
+	case "$LINK" in
+		/*) SELF="$LINK";;
+		*)  SELF="${SELF%/*}/$LINK";;
+	esac
+done
+
+FILES="$BASEDIR/lib/libc.s"
+
+while [ "$#" != 0 ]; do
+	case "$1" in
+	--) shift; break;;
+	*)  FILES="$FILES $1"; shift;;
+	esac
+done
+
+set +e
+mars nc $FILES pa 'a.out' "$@"
+RES="$?"
+set -e
+
+echo "Returned with exit code: $RES"
+exit "$RES"

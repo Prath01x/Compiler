@@ -1,0 +1,11 @@
+/bin/
+/libs/
+.vscode/
+*.dll
+*.so
+*.jar
+*.class
+*.lib
+*.dylib
+*.exe
+

@@ -1,0 +1,31 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Compile",
+            "type": "java",
+            "request": "launch",
+            "mainClass": "tinycc.driver.TinyC",
+            "args": "-c ${input:input_file} -o ${input:output_file}"
+        },
+        {
+            "name": "Verify",
+            "type": "java",
+            "request": "launch",
+            "mainClass": "tinycc.driver.TinyC",
+            "args": "-v ${input:input_file}"
+        }
+    ],
+    "inputs": [
+        {
+            "id": "input_file",
+            "type": "promptString",
+            "description": "Specify the TinyC input file to compile/verify."
+        },
+        {
+            "id": "output_file",
+            "type": "promptString",
+            "description": "Specify the output file."
+        }
+    ]
+}

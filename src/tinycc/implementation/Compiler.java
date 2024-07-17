@@ -1,6 +1,10 @@
 package tinycc.implementation;
 
 import tinycc.diagnostic.Diagnostic;
+import tinycc.implementation.AST.ASTBuilder;
+import tinycc.implementation.codegeneration.CodeGenerator;
+import tinycc.implementation.semantics.Scope;
+import tinycc.implementation.semantics.TypeChecker;
 import tinycc.parser.ASTFactory;
 import tinycc.parser.Lexer;
 import tinycc.parser.Parser;
@@ -18,6 +22,9 @@ import tinycc.mipsasmgen.MipsAsmGen;
 public class Compiler {
 
 	Diagnostic diagnostic;
+	private ASTBuilder AST;
+	private TypeChecker tc;
+	private Scope scope;
 
 	/**
 	 * Initializes the compiler class with the given diagnostic module
@@ -27,6 +34,7 @@ public class Compiler {
 	 */
 	public Compiler(final Diagnostic diagnostic) {
 		this.diagnostic = diagnostic;
+		this.AST = new ASTBuilder();
 	}
 
 	/**
@@ -36,7 +44,7 @@ public class Compiler {
 	 * @see ASTFactory
 	 */
 	public ASTFactory getASTFactory() {
-		throw new UnsupportedOperationException("TODO: implement this");
+		return this.AST;
 	}
 
 	/**
@@ -61,7 +69,8 @@ public class Compiler {
 	 *          invoked only once in each instance of the compiler class.
 	 */
 	public void checkSemantics() {
-		throw new UnsupportedOperationException("TODO: implement this");
+		tc = new TypeChecker(diagnostic, AST);
+		scope = tc.checkTypes();
 	}
 
 	/**
@@ -81,7 +90,9 @@ public class Compiler {
 	 *          class. Only necessary if mentioned in the project description.
 	 */
 	public void generateCode(final MipsAsmGen out) {
-		throw new UnsupportedOperationException("TODO: implement this");
+
+		final CodeGenerator gen = new CodeGenerator(scope, out, AST);
+		gen.generate();
 	}
 
 	/**
